@@ -1,0 +1,45 @@
+﻿<Window x:Class="MyPanel.ShowInfoWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MyPanel"
+             mc:Ignorable="d"
+             Width="320" Height="320"
+             d:DesignHeight="320" d:DesignWidth="320">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock TextWrapping="Wrap" 
+                   FontSize="20" FontFamily="Arial" 
+                   Grid.ColumnSpan="4" Grid.Row="1"
+                   HorizontalAlignment="Center">
+            <Run>ГК Третий Трест</Run>
+        </TextBlock>
+        <TextBlock TextWrapping="NoWrap"
+                   FontSize="15" FontFamily="Times New Roman"
+                   Grid.ColumnSpan="4" Grid.Row="2"
+                   HorizontalAlignment="Center">
+            <Run>Пробное окно вывода информации</Run>
+        </TextBlock>
+        <TextBlock Grid.Row="4" Grid.Column="4"
+                   VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                   Margin="0,0,0,15">
+            <Run>Версия 0.01</Run>
+        </TextBlock>
+        <Image Grid.Column="3" Grid.Row="3"
+               Source="D:\cs test stepik\MyPanel\MyPanel\Resources\ГК_ТретийТрест.png" 
+               Height="30" VerticalAlignment="Top" HorizontalAlignment="Center"
+               Margin="0, 10, 0, 0"></Image>
+    </Grid>
+</Window>
