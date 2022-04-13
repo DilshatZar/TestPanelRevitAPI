@@ -23,7 +23,9 @@
         <TextBlock TextWrapping="Wrap" 
                    FontSize="20" FontFamily="Arial" 
                    Grid.ColumnSpan="4" Grid.Row="1"
-                   HorizontalAlignment="Center">
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Margin="0, 0, 0, 0">
             <Run>ГК Третий Трест</Run>
         </TextBlock>
         <TextBlock TextWrapping="NoWrap"

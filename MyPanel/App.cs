@@ -32,7 +32,7 @@ namespace MyPanel
             newBtn.LargeImage = imgSrc;
             newBtn.Image = imgSrc;
 
-            PushButtonData newButton1 = new PushButtonData("Count elems\nindocs", "CountDocsBtn", Assembly.GetExecutingAssembly().Location, "MyPanel.OpenAndCountDocs");
+            PushButtonData newButton1 = new PushButtonData("Count elems\nindocs", "Редактировать\nвыбранный", Assembly.GetExecutingAssembly().Location, "MyPanel.ChangeParamterWinBtn");
             PushButton newBtn1 = panel.AddItem(newButton1) as PushButton;
             Image img1 = Properties.Resources.test1_32;
             ImageSource imgSrc1 = Conver(img1);
