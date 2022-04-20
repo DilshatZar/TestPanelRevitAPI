@@ -20,8 +20,8 @@ namespace MyPanel
     {
         public Result OnStartup(UIControlledApplication a)
         {
-            string tabName = "Test Tab";
-            string panelName = "Test Panel";
+            string tabName = "Тестовая вкладка";
+            string panelName = "Тестовая панель";
             a.CreateRibbonTab(tabName);
             RibbonPanel panel = a.CreateRibbonPanel(tabName, panelName);
 
@@ -32,19 +32,26 @@ namespace MyPanel
             newBtn.LargeImage = imgSrc;
             newBtn.Image = imgSrc;
 
-            PushButtonData newButton1 = new PushButtonData("Count elems\nindocs", "Редактировать\nвыбранный", Assembly.GetExecutingAssembly().Location, "MyPanel.ChangeParamterWinBtn");
+            PushButtonData newButton1 = new PushButtonData("Task1", "Task1", Assembly.GetExecutingAssembly().Location, "MyPanel.Task3_2_5");
             PushButton newBtn1 = panel.AddItem(newButton1) as PushButton;
             Image img1 = Properties.Resources.test1_32;
             ImageSource imgSrc1 = Conver(img1);
             newBtn1.LargeImage = imgSrc1;
             newBtn1.Image = imgSrc1;
 
-            PushButtonData newButton2 = new PushButtonData("Count Family\nids", "CountFamilyBtn", Assembly.GetExecutingAssembly().Location, "MyPanel.CountFamilyIds");
+            PushButtonData newButton2 = new PushButtonData("Task2", "Task2", Assembly.GetExecutingAssembly().Location, "MyPanel.Task3_2_6");
             PushButton newBtn2 = panel.AddItem(newButton2) as PushButton;
             Image img2 = Properties.Resources.task3;
             ImageSource imgSrc2 = Conver(img2);
             newBtn2.LargeImage = imgSrc2;
             newBtn2.Image = imgSrc2;
+
+            //PushButtonData newButton3 = new PushButtonData("RenameRooms", "Переименовать комнаты", Assembly.GetExecutingAssembly().Location, "MyPanel.RenameAllRooms");
+            //PushButton newBtn3 = panel.AddItem(newButton3) as PushButton;
+            //Image img3 = Properties.Resources.поэтажный_план_32;
+            //ImageSource imgSrc3 = Conver(img3);
+            //newBtn3.LargeImage = imgSrc3;
+            //newBtn3.Image = imgSrc3;
 
             return Result.Succeeded;
         }

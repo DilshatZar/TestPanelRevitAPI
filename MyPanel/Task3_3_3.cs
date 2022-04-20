@@ -14,7 +14,7 @@ using System.Linq;
 namespace MyPanel
 {
     [Transaction(TransactionMode.Manual)]
-    public class CountFamilyIds : IExternalCommand
+    public class Task3_3_3 : IExternalCommand
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {

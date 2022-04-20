@@ -15,7 +15,7 @@ using System.Linq;
 namespace MyPanel
 {
     [Transaction(TransactionMode.Manual)]
-    public class OpenAndCountDocs : IExternalCommand
+    public class Task3_3_2 : IExternalCommand
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
