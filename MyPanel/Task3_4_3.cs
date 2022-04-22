@@ -15,7 +15,7 @@ using System.Linq;
 namespace MyPanel
 {
     [Transaction(TransactionMode.Manual)]
-    public class Task3_3_5 : IExternalCommand
+    public class Task3_4_3 : IExternalCommand
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
@@ -28,13 +28,20 @@ namespace MyPanel
 
             Selection sel = uidoc.Selection;
 
-            // Retrieve elements from database
+            int[] wallsIds = new int[] { 139854, 150861, 151331, 154279, 157703, 157704, 158056, 158281, 158342, 158434, 158481, 158528 };
 
-            IList<Element> col = new FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StructuralColumns).WhereElementIsNotElementType().ToElements();
-            
+            string[] referencesStringRepresentations = new string[] {
+                "9e597f98-694d-4ada-b8ef-0e7459e0b930-000267fd:7:SURFACE",
+                "9e597f98-694d-4ada-b8ef-0e7459e0b930-000267fe:6:SURFACE",
+                "9e597f98-694d-4ada-b8ef-0e7459e0b930-00026ac4:7:SURFACE"
+            };
 
-            Debug.Print($"{}");
-            Debug.Print("Complited the task3_2_5.");
+
+
+            AnswerWindow answerWindow = new AnswerWindow();
+            answerWindow.ShowDialog();
+
+            Debug.Print("Complited the task3_4_2.");
             return Result.Succeeded;
         }
     }
