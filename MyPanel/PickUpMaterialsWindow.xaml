@@ -1,0 +1,76 @@
+﻿<Window x:Class="MyPanel.PickMaterialsClass"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MyPanel"
+             mc:Ignorable="d"
+             Background="LightGray"
+             Height="640" Width="560">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1.35*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <ListBox Name="allMaterialsList"
+                 Grid.Row="1" Grid.RowSpan="4" 
+                 Grid.Column="0"
+                 Margin="16, 0, 0, 0"
+                 Background="White">
+            <Grid>
+                <ScrollViewer HorizontalAlignment="Left"
+                              VerticalScrollBarVisibility="Auto"
+                              CanContentScroll="True"
+                              VerticalAlignment="Center" Height="442" Width="196">
+                </ScrollViewer>
+            </Grid>
+        </ListBox>
+        <ListBox Name="selectedMaterialsList"
+                 Grid.Row="1" Grid.RowSpan="4"
+                 Grid.Column="2"
+                 Margin="0, 0, 16, 0"
+                 Background="White"
+                 Keyboard.KeyDown="selectedMaterialsList_KeyDown"/>
+        <Button Name="moveToSelectionsBtn"
+                Grid.Row="2"
+                Grid.Column="1"
+                Height="40"
+                Width="46"
+                Click="moveToSelections_Click">
+            <Grid>
+                <Image Source="D:\cs test stepik\MyPanel\icons\rightSideArrow.png"
+                       Height="24"/>
+            </Grid>
+        </Button>
+        <Button Name="removeFromSelectionsBtn"
+                Grid.Row="3"
+                Grid.Column="1"
+                Height="40"
+                Width="46"
+                Click="removeFromSelections_Click">
+            <Grid>
+                <Image Source="D:\cs test stepik\MyPanel\icons\leftSideArrow.png"
+                       Height="24"/>
+            </Grid>
+        </Button>
+        <Button Name="confirmSelections"
+                Grid.Row="5"
+                Grid.Column="2"
+                Height="30" Width="86"
+                HorizontalAlignment="Right"
+                Margin="0, 0, 16, 0">
+            <Grid>
+                <TextBlock>Подтвердить</TextBlock>
+            </Grid>
+        </Button>
+    </Grid>
+</Window>

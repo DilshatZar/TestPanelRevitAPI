@@ -28,31 +28,35 @@ namespace MyPanel
 
             Selection sel = uidoc.Selection;
 
-            // Retrieve elements from database
-
-            IList<Element> familyInstances = new FilteredElementCollector(doc).OfClass(typeof(FamilyInstance)).ToElements();
-            IList<Element> familySymbols = new FilteredElementCollector(doc).OfClass(typeof(FamilySymbol)).ToElements();
+            FilteredElementCollector familyInstances = new FilteredElementCollector(doc).OfClass(typeof(FamilyInstance)).WhereElementIsNotElementType();
+            IList<Family> families = new List<Family>();
+            IList<string> familyNames = new List<string>();
 
             int ids = 0;
             foreach (FamilyInstance element in familyInstances)
             {
                 if (element.Symbol.Family.Id.IntegerValue <= 100000)
                 {
-                    Debug.Print($"{element.Symbol.Family.Id.IntegerValue}");
                     ids += element.Id.IntegerValue;
                 }
-            }
-            foreach (FamilySymbol element in familySymbols)
-            {
-                if (element.Family.Id.IntegerValue > 100000)
+                else if(!familyNames.Contains(element.Symbol.FamilyName))
                 {
-                    Debug.Print($"{element.Family.Id.IntegerValue}");
-                    ids += element.Id.IntegerValue;
+                    families.Add(element.Symbol.Family);
+                    familyNames.Add(element.Symbol.FamilyName);
+                }
+            }
+
+            foreach (Family family in families)
+            {
+                foreach (ElementId elementId in family.GetFamilySymbolIds())
+                {
+                    FamilySymbol familySymbol = doc.GetElement(elementId) as FamilySymbol;
+                    ids += familySymbol.Id.IntegerValue;
                 }
             }
 
             AnswerWindow answerWindow = new AnswerWindow(ids);
-            answerWindow.ShowDialog();
+            answerWindow.Show();
 
             Debug.Print("Complited the task3_3_5.");
             return Result.Succeeded;

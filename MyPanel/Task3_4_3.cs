@@ -36,12 +36,33 @@ namespace MyPanel
                 "9e597f98-694d-4ada-b8ef-0e7459e0b930-00026ac4:7:SURFACE"
             };
 
+            IList<Wall> walls = new List<Wall>();
+            foreach (int wallId in wallsIds)
+            {
+                walls.Add(doc.GetElement(new ElementId(wallId)) as Wall);
+            }
+            
+            Options geometryOptions = new Options();
+            geometryOptions.IncludeNonVisibleObjects = true;
 
-
+            ViewPlan sndFloorView = null;
             AnswerWindow answerWindow = new AnswerWindow();
-            answerWindow.ShowDialog();
+            answerWindow.Show();
 
-            Debug.Print("Complited the task3_4_2.");
+            foreach (ViewPlan view in new FilteredElementCollector(doc).OfClass(typeof(ViewPlan)))
+            {
+                if (view.ViewType == ViewType.FloorPlan && view.Name == "02 - Floor")
+                {
+                    sndFloorView = view;
+                    break;
+                }
+            }
+            if (sndFloorView != null)
+            {
+                geometryOptions.View = sndFloorView;
+            }
+
+            Debug.Print("Complited the task3_4_3.");
             return Result.Succeeded;
         }
     }
