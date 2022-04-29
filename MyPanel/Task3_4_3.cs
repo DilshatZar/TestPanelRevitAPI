@@ -29,21 +29,26 @@ namespace MyPanel
             Selection sel = uidoc.Selection;
 
             int[] wallsIds = new int[] { 139854, 150861, 151331, 154279, 157703, 157704, 158056, 158281, 158342, 158434, 158481, 158528 };
+            IList<Wall> walls = new List<Wall>();
+            foreach (int wallId in wallsIds)
+            {
+                walls.Add(doc.GetElement(new ElementId(wallId)) as Wall);
+            }
 
             string[] referencesStringRepresentations = new string[] {
                 "9e597f98-694d-4ada-b8ef-0e7459e0b930-000267fd:7:SURFACE",
                 "9e597f98-694d-4ada-b8ef-0e7459e0b930-000267fe:6:SURFACE",
                 "9e597f98-694d-4ada-b8ef-0e7459e0b930-00026ac4:7:SURFACE"
             };
-
-            IList<Wall> walls = new List<Wall>();
-            foreach (int wallId in wallsIds)
+            IList<Reference> references = new List<Reference>();
+            foreach (string referenceId in referencesStringRepresentations)
             {
-                walls.Add(doc.GetElement(new ElementId(wallId)) as Wall);
+                references.Add(Reference.ParseFromStableRepresentation(doc, referenceId));
             }
             
             Options geometryOptions = new Options();
             geometryOptions.IncludeNonVisibleObjects = true;
+            geometryOptions.ComputeReferences = true;
 
             ViewPlan sndFloorView = null;
             AnswerWindow answerWindow = new AnswerWindow();
@@ -60,6 +65,34 @@ namespace MyPanel
             if (sndFloorView != null)
             {
                 geometryOptions.View = sndFloorView;
+            }
+
+            Dictionary<string, IList<Reference>> wallsLinesReferences = new Dictionary<string, IList<Reference>>();
+            IList<Reference> wallExteriorReferences = new List<Reference>();
+            foreach (Wall wall in walls)
+            {
+                wallExteriorReferences.Union(HostObjectUtils.GetSideFaces(wall, ShellLayerType.Exterior));
+                //wallsLinesReferences.Add(wall.Name + ' ' + wall.Id.ToString(), HostObjectUtils.GetSideFaces(wall, ShellLayerType.Exterior).Union(HostObjectUtils.GetSideFaces(wall, ShellLayerType.Interior)));
+            }
+
+            answerWindow.answerTextBlock.Text += wallExteriorReferences.Count.ToString() + '\n';
+            foreach (var wallLine in wallsLinesReferences)
+            {
+                answerWindow.Write(wallLine.Key + ": ");
+                foreach (var reference in wallLine.Value)
+                {
+                    if (reference != null)
+                    {
+                        answerWindow.Write(reference.ToString());
+                    }
+                }
+                answerWindow.WriteLine();
+            }
+
+            ReferenceArray referenceArray = app.Create.NewReferenceArray();
+            foreach (Reference reference in wallExteriorReferences)
+            {
+                referenceArray.Append(reference);
             }
 
             Debug.Print("Complited the task3_4_3.");

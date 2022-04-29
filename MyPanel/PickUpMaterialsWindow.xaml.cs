@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Autodesk.Revit.DB;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,18 @@ namespace MyPanel
     /// </summary>
     public partial class PickMaterialsClass : Window
     {
-        public PickMaterialsClass()
+        List<Element> materials = null;
+        public PickMaterialsClass(IList<Element> materials)
         {
             InitializeComponent();
+
+            this.materials = materials.ToList();
+            foreach (Material material in materials)
+            {
+                allMaterialsList.Items.Add(material.Name);
+            }
+            //allMaterialsList.Items.SortDescriptions.Add(
+            //    new System.ComponentModel.SortDescription("", System.ComponentModel.ListSortDirection.Ascending));
         }
         private void selectedMaterialsList_KeyDown(object sender, KeyEventArgs e)
         {
@@ -31,12 +41,28 @@ namespace MyPanel
 
         private void moveToSelections_Click(object sender, RoutedEventArgs e)
         {
-
+            var selectedMaterials = allMaterialsList.SelectedItems;
+            if (selectedMaterials.Count > 0)
+            {
+                while (selectedMaterials.Count > 0)
+                {
+                    selectedMaterialsList.Items.Add(selectedMaterials[0]);
+                    allMaterialsList.Items.Remove(selectedMaterials[0]);
+                }
+            }
         }
 
         private void removeFromSelections_Click(object sender, RoutedEventArgs e)
         {
-
+            var selectedMaterials = selectedMaterialsList.SelectedItems;
+            if (selectedMaterials.Count > 0)
+            {
+                while (selectedMaterials.Count > 0)
+                {
+                    selectedMaterialsList.Items.Remove(selectedMaterials[0]);
+                    allMaterialsList.Items.Add(selectedMaterials[0]);
+                }
+            }
         }
     }
 }

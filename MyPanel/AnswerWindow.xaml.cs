@@ -43,5 +43,8 @@ namespace MyPanel
             InitializeComponent();
             answerTextBlock.Text = text;
         }
+
+        public void WriteLine(string str = "") => answerTextBlock.Text += str + '\n';
+        public void Write(string str) => answerTextBlock.Text += str;
     }
 }

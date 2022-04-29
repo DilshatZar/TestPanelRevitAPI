@@ -8,6 +8,6 @@
              Height="150" Width="200"
              d:DesignHeight="150" d:DesignWidth="200">
     <Grid>
-        <TextBox Name="answerTextBlock"></TextBox>
+        <TextBox Name="answerTextBlock"/>
     </Grid>
 </Window>
