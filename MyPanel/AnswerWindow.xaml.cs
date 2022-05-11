@@ -23,11 +23,13 @@ namespace MyPanel
         public AnswerWindow()
         {
             InitializeComponent();
+            Show();
         }
         public AnswerWindow(int number)
         {
             InitializeComponent();
-            answerTextBlock.Text = number.ToString();
+            answerTextBlock.Text = number.ToString() + '\n';
+            Show();
         }
         public AnswerWindow(double number, bool round = false)
         {
@@ -36,15 +38,17 @@ namespace MyPanel
             {
                 number = Math.Round(number);
             }
-            answerTextBlock.Text = number.ToString();
+            answerTextBlock.Text = number.ToString() + '\n';
+            Show();
         }
         public AnswerWindow(string text)
         {
             InitializeComponent();
-            answerTextBlock.Text = text;
+            answerTextBlock.Text = text + '\n';
+            Show();
         }
 
         public void WriteLine(string str = "") => answerTextBlock.Text += str + '\n';
-        public void Write(string str) => answerTextBlock.Text += str;
+        public void Write(string str = " ") => answerTextBlock.Text += str;
     }
 }

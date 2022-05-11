@@ -32,7 +32,7 @@ namespace MyPanel
             newBtn.LargeImage = imgSrc;
             newBtn.Image = imgSrc;
 
-            PushButtonData newButton1 = new PushButtonData("Task1", "Task1", Assembly.GetExecutingAssembly().Location, "MyPanel.Task3_4_3");
+            PushButtonData newButton1 = new PushButtonData("Task1", "Task1", Assembly.GetExecutingAssembly().Location, "MyPanel.Task3_4_4");
             PushButton newBtn1 = panel.AddItem(newButton1) as PushButton;
             Image img1 = Properties.Resources.test1_32;
             ImageSource imgSrc1 = Conver(img1);

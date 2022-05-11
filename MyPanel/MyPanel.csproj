@@ -58,6 +58,8 @@
   <ItemGroup>
     <Compile Include="ChangeParamterWinBtn.cs" />
     <Compile Include="SelectMaterialsBtn.cs" />
+    <Compile Include="Task3_4_5.cs" />
+    <Compile Include="Task3_4_4.cs" />
     <Compile Include="Task3_4_3.cs" />
     <Compile Include="Task3_4_2.cs" />
     <Compile Include="Task3_3_5.cs" />
