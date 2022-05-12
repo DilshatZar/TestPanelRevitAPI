@@ -51,13 +51,17 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChangeParamterWinBtn.cs" />
     <Compile Include="SelectMaterialsBtn.cs" />
+    <Compile Include="TRGR_Apartmentography.cs" />
     <Compile Include="Task3_4_5.cs" />
     <Compile Include="Task3_4_4.cs" />
     <Compile Include="Task3_4_3.cs" />
@@ -93,6 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MyPanel.addin" />
+    <None Include="Variables.config" />
     <None Include="Resources\rightSideArrow.png" />
     <None Include="Resources\leftSideArrow.png" />
     <None Include="Resources\поэтажный-план-32.png" />
