@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="ChangeParamterWinBtn.cs" />
     <Compile Include="SelectMaterialsBtn.cs" />
+    <Compile Include="TRGR_ChangeConfigSettings.cs" />
     <Compile Include="TRGR_Apartmentography.cs" />
     <Compile Include="Task3_4_5.cs" />
     <Compile Include="Task3_4_4.cs" />
@@ -94,16 +95,20 @@
     <Compile Include="PickUpMaterialsWindow.xaml.cs">
       <DependentUpon>PickUpMaterialsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ConfigSettingsWindow.xaml.cs">
+      <DependentUpon>ConfigSettingsWindow.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="MyPanel.addin" />
-    <None Include="Variables.config" />
-    <None Include="Resources\rightSideArrow.png" />
-    <None Include="Resources\leftSideArrow.png" />
-    <None Include="Resources\поэтажный-план-32.png" />
-    <None Include="Resources\icons8-icons8-32.png" />
-    <None Include="Resources\ГК_ТретийТрест.png" />
-    <None Include="Resources\test1-32.png" />
+    <Resource Include="Resources\settings_32.png" />
+    <None Include="App.config" />
+    <Resource Include="Resources\rightSideArrow.png" />
+    <Resource Include="Resources\leftSideArrow.png" />
+    <Resource Include="Resources\поэтажный-план-32.png" />
+    <Resource Include="Resources\icons8-icons8-32.png" />
+    <Resource Include="Resources\ГК_ТретийТрест.png" />
+    <Resource Include="Resources\test1-32.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -128,11 +133,16 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ConfigSettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if exist "$(AppData)\Autodesk\REVIT\Addins\2022" copy "$(ProjectDir)*.addin" "$(AppData)\Autodesk\REVIT\Addins\2022"
-if exist "$(AppData)\Autodesk\REVIT\Addins\2022" copy "$(ProjectDir)$(OutputPath)*.dll" "$(AppData)\Autodesk\REVIT\Addins\2022"</PostBuildEvent>
+if exist "$(AppData)\Autodesk\REVIT\Addins\2022" copy "$(ProjectDir)$(OutputPath)*.dll" "$(AppData)\Autodesk\REVIT\Addins\2022"
+if exist "$(AppData)\Autodesk\REVIT\Addins\2022" copy "$(ProjectDir)$(OutputPath)*.dll.config" "$(AppData)\Autodesk\REVIT\Addins\2022"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

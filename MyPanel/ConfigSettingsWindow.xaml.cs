@@ -1,0 +1,105 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Reflection;
+using System.Windows;
+using System.Windows.Controls;
+
+namespace MyPanel
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public partial class ConfigSettingsWindow : Window
+    {
+        Configuration libConfig;
+        AppSettingsSection section;
+        KeyValueConfigurationCollection settings;
+        Dictionary<string, string> configurations = new Dictionary<string, string>();
+
+        public ConfigSettingsWindow()
+        {
+            ExeConfigurationFileMap map = new ExeConfigurationFileMap();
+            map.ExeConfigFilename = Assembly.GetExecutingAssembly().Location + ".config";
+            libConfig = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
+            section = libConfig.GetSection("appSettings") as AppSettingsSection;
+            settings = libConfig.AppSettings.Settings;
+
+            InitializeComponent();
+
+            configurations.Add("Числа после запятой", "ROUNDING_NUMBER");
+
+            foreach (string key in configurations.Keys)
+            {
+                cmbBox.Text = key;
+            }
+            cmbBox.SelectedIndex = 0;
+            try
+            {
+                txtBox.Text = settings[configurations[cmbBox.Text]].Value;
+            }
+            catch (Exception ex)
+            {
+                AnswerWindow answer = new AnswerWindow();
+                foreach (var key in configurations.Keys) 
+                {
+                    answer.WriteLine();
+                }
+                answer.WriteLine("-----------------------");
+                foreach (var key in settings.AllKeys)
+                {
+                    answer.WriteLine(key);
+                }
+                answer.WriteLine("-----------------------");
+                foreach (var key in cmbBox.Items)
+                {
+                    answer.WriteLine(key.ToString());
+                }
+            }
+        }
+
+        private void acceptChanges_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                settings[configurations[cmbBox.Text]].Value = txtBox.Text;
+                libConfig.Save(ConfigurationSaveMode.Modified);
+                ConfigurationManager.RefreshSection(libConfig.AppSettings.SectionInformation.Name);
+                Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка изменения параметра.\n" + ex.Message, "Ошибка");
+            }
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void cmbBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                txtBox.Text = settings[configurations[cmbBox.Text]].Value;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(cmbBox.SelectedItem.ToString(), ex.Message);
+            }
+        }
+
+        public string GetParameterValue(string name)
+        {
+            return settings[configurations[cmbBox.Text]].Value;
+        }
+
+        public void SetParameterValue(string name, string value)
+        {
+            settings[name].Value = value;
+            libConfig.Save(ConfigurationSaveMode.Modified);
+            ConfigurationManager.RefreshSection(libConfig.AppSettings.SectionInformation.Name);
+        }
+    }
+}

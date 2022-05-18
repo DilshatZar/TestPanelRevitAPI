@@ -4,10 +4,10 @@
     <Text>Command MyPanel</Text>
     <Description>Some description for MyPanel</Description>
     <Assembly>MyPanel.dll</Assembly>
-    <FullClassName>MyPanel.Command</FullClassName>
+    <FullClassName>MyPanel.TRGR_Apartmentography</FullClassName>
     <ClientId>23163f03-b7cd-4f40-9d45-be50636449ec</ClientId>
     <VendorId>com.typepad.thebuildingcoder</VendorId>
-    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+    <VendorDescription>ГК Третий Трест</VendorDescription>
   </AddIn>
   <AddIn Type="Application">
     <Name>Application MyPanel</Name>
@@ -15,6 +15,6 @@
     <FullClassName>MyPanel.App</FullClassName>
     <ClientId>af753c9b-a558-4a57-969c-e22a64440516</ClientId>
     <VendorId>com.typepad.thebuildingcoder</VendorId>
-    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+    <VendorDescription>ГК Третий Трест</VendorDescription>
   </AddIn>
 </RevitAddIns>
