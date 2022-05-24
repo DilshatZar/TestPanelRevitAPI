@@ -43,12 +43,6 @@ namespace MyPanel
                 MessageBox.Show("Выберите один элемент!");
             }
 
-            using (Transaction tx = new Transaction(doc))
-            {
-                tx.Start("Transaction Name");
-                tx.Commit();
-            }
-
             Debug.Print("Complited the task.");
             return Result.Succeeded;
         }

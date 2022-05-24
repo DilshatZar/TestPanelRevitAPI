@@ -49,6 +49,15 @@ namespace MyPanel
         }
 
         public void WriteLine(string str = "") => answerTextBlock.Text += str + '\n';
+        public void WriteLine(string[] str)
+        {
+            foreach (string str2 in str)
+            {
+                Write(str2 + ' ');
+            }
+        }
+        public void WriteLine(bool val) => answerTextBlock.Text += val.ToString() + '\n';
         public void Write(string str = " ") => answerTextBlock.Text += str;
+        public void Devide() => answerTextBlock.Text += "-------------------------------------\n"; 
     }
 }

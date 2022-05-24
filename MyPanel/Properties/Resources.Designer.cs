@@ -63,6 +63,26 @@ namespace MyPanel.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap apartmentography_32ptx {
+            get {
+                object obj = ResourceManager.GetObject("apartmentography_32ptx", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap gen_areas_32ptx {
+            get {
+                object obj = ResourceManager.GetObject("gen_areas_32ptx", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap leftSideArrow {
             get {
                 object obj = ResourceManager.GetObject("leftSideArrow", resourceCulture);
@@ -76,6 +96,16 @@ namespace MyPanel.Properties {
         internal static System.Drawing.Bitmap rightSideArrow {
             get {
                 object obj = ResourceManager.GetObject("rightSideArrow", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap settings {
+            get {
+                object obj = ResourceManager.GetObject("settings", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

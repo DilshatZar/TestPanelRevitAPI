@@ -22,7 +22,7 @@ namespace MyPanel
     {
         public Result OnStartup(UIControlledApplication a)
         {
-            string tabName = "Трейтий Трест плагины";
+            string tabName = "Трейтий Трест";
             string panelName = "Тестовая панель";
             a.CreateRibbonTab(tabName);
             //RibbonPanel panel = a.CreateRibbonPanel(tabName, panelName);

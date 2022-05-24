@@ -25,6 +25,8 @@ namespace MyPanel
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
+            AnswerWindow answerWindow = new AnswerWindow();
+
             UIApplication uiapp = commandData.Application;
             UIDocument uidoc = uiapp.ActiveUIDocument;
             RevitApplication app = uiapp.Application;
@@ -35,14 +37,21 @@ namespace MyPanel
 
             ConfigSettingsWindow config = new ConfigSettingsWindow();
             int roundNum = 2;
+            double loggieAreaCoef = 0.5;
+            double balconyAreaCoef = 0.3;
             try
             {
                 roundNum = int.Parse(config.GetParameterValue("ROUNDING_NUMBER"));
+                loggieAreaCoef = double.Parse(config.GetParameterValue("LoggiaAreaCoef").Replace(".", ","));
+                balconyAreaCoef = double.Parse(config.GetParameterValue("BalconyAreaCoef").Replace(".", ","));
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Использование значения по умолчанию для параметра \"Числа после запятой\": 2", "Ошибка считывания параметров.");
+                MessageBox.Show(ex.Message);
+                MessageBox.Show("Использование значений по умолчанию для параметров: \n\"Числа после запятой\": 2 \n\"Коэффициент площади лоджии\": 0.5 \n\"Коэффициент площади балкона\": 0.3", "Ошибка считывания параметров.");
                 config.SetParameterValue("ROUNDING_NUMBER", "2");
+                config.SetParameterValue("LoggiaAreaCoef", "0.5");
+                config.SetParameterValue("BalconyAreaCoef", "0.3");
             }
 
             ExeConfigurationFileMap map = new ExeConfigurationFileMap();
@@ -69,17 +78,27 @@ namespace MyPanel
                 foreach (string num in apartments.Keys)
                 {
                     int numberOfLivingRooms = 0;
-                    double apartmaneAreaWithoutSummerRooms = 0;
-                    double apartmentAreaLivingRooms = 0;
-                    double apartmentAreaGeneral = 0;
-                    double apartmentAreaGeneralWithoutCoef = 0;
+                    double apartmentAreaLivingRooms = 0;            // ADSK_Площадь квартиры жилая
+                    double apartmaneAreaWithoutSummerRooms = 0;     // ADSK_Площадь квартиры
+                    double apartmentAreaGeneral = 0;                // ADSK_Площадь квартиры общая
+                    double apartmentAreaGeneralWithoutCoef = 0;     // TRGR_Площадь квартиры без кф
                     foreach (Room room in apartments[num])
                     {
-                        double areaOfRoom = UnitUtils.ConvertFromInternalUnits(room.get_Parameter(BuiltInParameter.ROOM_AREA).AsDouble(), UnitTypeId.SquareMeters);
-                        room.LookupParameter("TRGR_Площадь помещения").Set(UnitUtils.ConvertToInternalUnits(Math.Round(areaOfRoom, roundNum), UnitTypeId.SquareMeters));
+                        double areaOfRoom = Math.Round(UnitUtils.ConvertFromInternalUnits(room.get_Parameter(BuiltInParameter.ROOM_AREA).AsDouble(), UnitTypeId.SquareMeters), roundNum);
+                        try
+                        {
+                            room.LookupParameter("TRGR_Площадь помещения").Set(UnitUtils.ConvertToInternalUnits(Math.Round(areaOfRoom, roundNum), UnitTypeId.SquareMeters));
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.Print(ex.ToString());
+                        }
                         try
                         {
                             int roomType = room.LookupParameter("ADSK_Тип помещения").AsInteger();
+
+                            double coefficent = room.LookupParameter("ADSK_Коэффициент площади").AsDouble();
+
                             if (roomType != 3 && roomType != 4)
                             {
                                 apartmaneAreaWithoutSummerRooms += areaOfRoom;
@@ -87,19 +106,33 @@ namespace MyPanel
                             }
                             if (roomType == 3 || roomType == 4)
                             {
-                                double coefficent = room.LookupParameter("ADSK_Коэффициент площади").AsDouble();
-                                apartmentAreaGeneral += areaOfRoom * coefficent;
+                                if (roomType == 3 && coefficent != loggieAreaCoef)
+                                {
+                                    answerWindow.WriteLine(coefficent.ToString());
+                                    MessageBox.Show("Неверно указан коэффициент площади лоджии.");
+                                    coefficent = loggieAreaCoef;
+                                    room.LookupParameter("ADSK_Коэффициент площади").Set(loggieAreaCoef);
+                                    answerWindow.WriteLine(coefficent.ToString());
+                                }
+                                else if (roomType == 4 && coefficent != balconyAreaCoef)
+                                {
+                                    MessageBox.Show("Неверно указан коэффициент площади балкона.");
+                                    coefficent = balconyAreaCoef;
+                                    room.LookupParameter("ADSK_Коэффициент площади").Set(balconyAreaCoef);
+                                }
+                                apartmentAreaGeneral += Math.Round(areaOfRoom * coefficent, roundNum);
                             }
                             if (roomType == 1)
                             {
                                 numberOfLivingRooms++;
                                 apartmentAreaLivingRooms += areaOfRoom;
                             }
+                            room.LookupParameter("ADSK_Площадь с коэффициентом").Set(UnitUtils.ConvertToInternalUnits(Math.Round(areaOfRoom * coefficent, roundNum), UnitTypeId.SquareMeters));
                             apartmentAreaGeneralWithoutCoef += areaOfRoom;
                         }
                         catch (Exception ex)
                         {
-                            continue;
+                            Debug.Print(ex.ToString());
                         }
                     }
 
@@ -109,11 +142,18 @@ namespace MyPanel
                     apartmentAreaGeneralWithoutCoef = UnitUtils.ConvertToInternalUnits(Math.Round(apartmentAreaGeneralWithoutCoef, roundNum), UnitTypeId.SquareMeters);
                     foreach (Room room in apartments[num])
                     {
-                        room.LookupParameter("ADSK_Количество комнат").Set(numberOfLivingRooms);
-                        room.LookupParameter("ADSK_Площадь квартиры").Set(apartmaneAreaWithoutSummerRooms);
-                        room.LookupParameter("ADSK_Площадь квартиры жилая").Set(apartmentAreaLivingRooms);
-                        room.LookupParameter("ADSK_Площадь квартиры общая").Set(apartmentAreaGeneral);
-                        room.LookupParameter("TRGR_Площадь квартиры без кф").Set(apartmentAreaGeneralWithoutCoef);
+                        try
+                        {
+                            room.LookupParameter("ADSK_Количество комнат").Set(numberOfLivingRooms);
+                            room.LookupParameter("ADSK_Площадь квартиры").Set(apartmaneAreaWithoutSummerRooms);
+                            room.LookupParameter("ADSK_Площадь квартиры жилая").Set(apartmentAreaLivingRooms);
+                            room.LookupParameter("ADSK_Площадь квартиры общая").Set(apartmentAreaGeneral);
+                            room.LookupParameter("TRGR_Площадь квартиры без кф").Set(apartmentAreaGeneralWithoutCoef);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.Print(ex.ToString());
+                        }
                     }
                 }
                 t.Commit();

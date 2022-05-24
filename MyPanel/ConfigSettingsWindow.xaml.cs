@@ -28,15 +28,15 @@ namespace MyPanel
             InitializeComponent();
 
             configurations.Add("Числа после запятой", "ROUNDING_NUMBER");
+            configurations.Add("Коэфициент площади лоджии", "LoggiaAreaCoef");
+            configurations.Add("Коэфициент площади балкона", "BalconyAreaCoef");
 
-            foreach (string key in configurations.Keys)
-            {
-                cmbBox.Text = key;
-            }
+            cmbBox.ItemsSource = configurations.Keys;
+
             cmbBox.SelectedIndex = 0;
             try
             {
-                txtBox.Text = settings[configurations[cmbBox.Text]].Value;
+                txtBox.Text = settings[configurations[cmbBox.SelectedItem.ToString()]].Value;
             }
             catch (Exception ex)
             {
@@ -62,7 +62,7 @@ namespace MyPanel
         {
             try
             {
-                settings[configurations[cmbBox.Text]].Value = txtBox.Text;
+                settings[configurations[cmbBox.SelectedItem.ToString()]].Value = txtBox.Text;
                 libConfig.Save(ConfigurationSaveMode.Modified);
                 ConfigurationManager.RefreshSection(libConfig.AppSettings.SectionInformation.Name);
                 Close();
@@ -82,7 +82,8 @@ namespace MyPanel
         {
             try
             {
-                txtBox.Text = settings[configurations[cmbBox.Text]].Value;
+                txtBox.Text = settings[configurations[cmbBox.SelectedItem.ToString()]].Value;
+                txtBox.Focus();
             }
             catch (Exception ex)
             {
@@ -92,7 +93,7 @@ namespace MyPanel
 
         public string GetParameterValue(string name)
         {
-            return settings[configurations[cmbBox.Text]].Value;
+            return settings[name].Value;
         }
 
         public void SetParameterValue(string name, string value)

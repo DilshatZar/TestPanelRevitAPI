@@ -35,7 +35,6 @@ namespace MyPanel
 
             ConfigSettingsWindow config = new ConfigSettingsWindow();
             config.ShowDialog();
-
             Debug.Print("Complited the task.");
             return Result.Succeeded;
         }
