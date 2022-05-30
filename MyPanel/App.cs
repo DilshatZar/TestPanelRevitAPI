@@ -57,7 +57,7 @@ namespace MyPanel
 
             RibbonPanel apartmnetographyPanel = a.CreateRibbonPanel(tabName, "Квартирография");
 
-            PushButtonData calcAreas = new PushButtonData("CalculateAreasOfView", "Квартирография", Assembly.GetExecutingAssembly().Location, "MyPanel.TRGR_Apartmentography");
+            PushButtonData calcAreas = new PushButtonData("CalculateAreasOfView", "Квартирография", Assembly.GetExecutingAssembly().Location, "MyPanel.TRGR_RoomsGeneration");
             calcAreas.ToolTip = "Вычисление площади помещений для каждой квартиры.";
             calcAreas.LongDescription = "0.1: Вычисления происходят только у квартир в активном виде и с заполненными параметрами \"ADSK_Номер квартиры\" и \"ADSK_Тип помещения\".";
             PushButton calcAreasBtn = apartmnetographyPanel.AddItem(calcAreas) as PushButton;

@@ -39,7 +39,8 @@
                    Margin="0,0,0,15">
             <Run>Версия 0.01</Run>
         </TextBlock>
-        <Image Grid.Column="3" Grid.Row="3"
+        <Image Name = "Image"
+               Grid.Column="3" Grid.Row="3"
                Source="D:\cs test stepik\MyPanel\MyPanel\Resources\ГК_ТретийТрест.png" 
                Height="30" VerticalAlignment="Top" HorizontalAlignment="Center"
                Margin="0, 10, 0, 0"></Image>

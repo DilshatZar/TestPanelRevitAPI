@@ -61,23 +61,28 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChangeParamterWinBtn.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="SelectMaterialsBtn.cs" />
     <Compile Include="TRGR_RoomsGeneration.cs" />
     <Compile Include="TRGR_ChangeConfigSettings.cs" />
     <Compile Include="TRGR_Apartmentography.cs" />
-    <Compile Include="Task3_4_5.cs" />
-    <Compile Include="Task3_4_4.cs" />
-    <Compile Include="Task3_4_3.cs" />
-    <Compile Include="Task3_4_2.cs" />
-    <Compile Include="Task3_3_5.cs" />
-    <Compile Include="Task3_2_6.cs" />
-    <Compile Include="Task3_2_5.cs" />
-    <Compile Include="Task3_2_4.cs" />
+    <Compile Include="stepiktasks\Task3_4_5.cs" />
+    <Compile Include="stepiktasks\Task3_4_4.cs" />
+    <Compile Include="stepiktasks\Task3_4_3.cs" />
+    <Compile Include="stepiktasks\Task3_4_2.cs" />
+    <Compile Include="stepiktasks\Task3_3_5.cs" />
+    <Compile Include="stepiktasks\Task3_2_6.cs" />
+    <Compile Include="stepiktasks\Task3_2_5.cs" />
+    <Compile Include="stepiktasks\Task3_2_4.cs" />
     <Compile Include="Model\CompareParametersInterface.cs" />
     <Compile Include="ShowDialogInfoButton.cs" />
     <Compile Include="App.cs" />
-    <Compile Include="Task3_3_2.cs" />
-    <Compile Include="Task3_3_3.cs" />
+    <Compile Include="stepiktasks\Task3_3_2.cs" />
+    <Compile Include="stepiktasks\Task3_3_3.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -85,24 +90,31 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="InfoWin.xaml.cs">
+    <Compile Include="Windows\InfoWin.xaml.cs">
       <DependentUpon>InfoWin.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ChangeSelectedElementWindow.xaml.cs">
+    <Compile Include="Windows\ChangeSelectedElementWindow.xaml.cs">
       <DependentUpon>ChangeSelectedElementWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AnswerWindow.xaml.cs">
+    <Compile Include="Windows\AnswerWindow.xaml.cs">
       <DependentUpon>AnswerWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PickUpMaterialsWindow.xaml.cs">
+    <Compile Include="Windows\PickUpMaterialsWindow.xaml.cs">
       <DependentUpon>PickUpMaterialsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ConfigSettingsWindow.xaml.cs">
-      <DependentUpon>ConfigSettingsWindow.xaml</DependentUpon>
+    <Compile Include="Windows\TRGR_ConfigSettingsWindow.xaml.cs">
+      <DependentUpon>TRGR_ConfigSettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\TRGR_RoomsParametersMistakes.xaml.cs">
+      <DependentUpon>TRGR_RoomsParametersMistakes.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="MyPanel.addin" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Resources\gen_areas_32ptx.png" />
     <None Include="Resources\apartmentography_32ptx.png" />
     <None Include="Resources\gen_areas_32ptx1.png" />
@@ -128,23 +140,27 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="InfoWin.xaml">
+    <Page Include="Windows\InfoWin.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ChangeSelectedElementWindow.xaml">
+    <Page Include="Windows\ChangeSelectedElementWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="AnswerWindow.xaml">
+    <Page Include="Windows\AnswerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PickUpMaterialsWindow.xaml">
+    <Page Include="Windows\PickUpMaterialsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ConfigSettingsWindow.xaml">
+    <Page Include="Windows\TRGR_ConfigSettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\TRGR_RoomsParametersMistakes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

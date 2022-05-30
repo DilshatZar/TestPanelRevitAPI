@@ -35,11 +35,11 @@ namespace MyPanel
             if (roomsToRemove.Count > 0)
             {
                 using (Transaction t = new Transaction(doc, "Удаление существующих помещений"))
-                {
+                { // Добвать проверку на наличие заполненых комнат
                     t.Start();
                     foreach (Room room in roomsToRemove)
                     {
-                        room.Unplace();
+                        doc.Delete(room.Id);
                     }
                     t.Commit();
                 }
