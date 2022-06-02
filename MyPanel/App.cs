@@ -22,10 +22,10 @@ namespace MyPanel
     {
         public Result OnStartup(UIControlledApplication a)
         {
-            string tabName = "Трейтий Трест";
+            string tabName = "Третий Трест";
             string panelName = "Тестовая панель";
             a.CreateRibbonTab(tabName);
-            //RibbonPanel panel = a.CreateRibbonPanel(tabName, panelName);
+            RibbonPanel panel = a.CreateRibbonPanel(tabName, panelName);
 
             //PushButtonData newButton = new PushButtonData("Test Button", "ГК Третий\nТрест", Assembly.GetExecutingAssembly().Location, "MyPanel.ShowDialogInfoButton");
             //PushButton newBtn = panel.AddItem(newButton) as PushButton;
@@ -34,12 +34,12 @@ namespace MyPanel
             //newBtn.LargeImage = imgSrc;
             //newBtn.Image = imgSrc;
 
-            //PushButtonData newButton1 = new PushButtonData("Task1", "Task1", Assembly.GetExecutingAssembly().Location, "MyPanel.TRGR_Apartmentography");
-            //PushButton newBtn1 = panel.AddItem(newButton1) as PushButton;
-            //Image img1 = Properties.Resources.test1_32;
-            //ImageSource imgSrc1 = ConvertToBitmap(img1);
-            //newBtn1.LargeImage = imgSrc1;
-            //newBtn1.Image = imgSrc1;
+            PushButtonData newButton1 = new PushButtonData("Task1", "Task1", Assembly.GetExecutingAssembly().Location, "MyPanel.TRGR_FillingApartments");
+            PushButton newBtn1 = panel.AddItem(newButton1) as PushButton;
+            Image img1 = Properties.Resources.test1_32;
+            ImageSource imgSrc1 = ConvertToBitmap(img1);
+            newBtn1.LargeImage = imgSrc1;
+            newBtn1.Image = imgSrc1;
 
             //PushButtonData newButton2 = new PushButtonData("Task2", "Task2", Assembly.GetExecutingAssembly().Location, "MyPanel.SelectMaterialsBtn");
             //PushButton newBtn2 = panel.AddItem(newButton2) as PushButton;
@@ -57,7 +57,7 @@ namespace MyPanel
 
             RibbonPanel apartmnetographyPanel = a.CreateRibbonPanel(tabName, "Квартирография");
 
-            PushButtonData calcAreas = new PushButtonData("CalculateAreasOfView", "Квартирография", Assembly.GetExecutingAssembly().Location, "MyPanel.TRGR_RoomsGeneration");
+            PushButtonData calcAreas = new PushButtonData("CalculateAreasOfView", "Квартирография", Assembly.GetExecutingAssembly().Location, "MyPanel.TRGR_Apartmentography");
             calcAreas.ToolTip = "Вычисление площади помещений для каждой квартиры.";
             calcAreas.LongDescription = "0.1: Вычисления происходят только у квартир в активном виде и с заполненными параметрами \"ADSK_Номер квартиры\" и \"ADSK_Тип помещения\".";
             PushButton calcAreasBtn = apartmnetographyPanel.AddItem(calcAreas) as PushButton;

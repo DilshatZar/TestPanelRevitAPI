@@ -63,6 +63,7 @@ namespace MyPanel
                 t.Commit();
             }
             MessageBox.Show("Изменение принято.");
+            Close();
         }
 
         private void ParametersList_SelectionChanged(object sender, SelectionChangedEventArgs e)

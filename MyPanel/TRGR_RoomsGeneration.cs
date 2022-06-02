@@ -234,7 +234,6 @@ namespace MyPanel
                 }
                 t.Commit();
             }
-            Debug.Print("Complited the task.");
             return Result.Succeeded;
         }
     }

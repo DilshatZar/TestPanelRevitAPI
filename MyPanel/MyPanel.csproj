@@ -67,6 +67,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="SelectMaterialsBtn.cs" />
+    <Compile Include="TRGR_Apartmentography_FloorFilling.cs" />
+    <Compile Include="TRGR_FillingApartments.cs" />
     <Compile Include="TRGR_RoomsGeneration.cs" />
     <Compile Include="TRGR_ChangeConfigSettings.cs" />
     <Compile Include="TRGR_Apartmentography.cs" />
@@ -107,6 +109,9 @@
     </Compile>
     <Compile Include="Windows\TRGR_RoomsParametersMistakes.xaml.cs">
       <DependentUpon>TRGR_RoomsParametersMistakes.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\TRGR_RoomIdList.xaml.cs">
+      <DependentUpon>TRGR_RoomIdList.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -161,6 +166,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\TRGR_RoomsParametersMistakes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\TRGR_RoomIdList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

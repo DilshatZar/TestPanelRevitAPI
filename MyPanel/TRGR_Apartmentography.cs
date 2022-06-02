@@ -5,6 +5,7 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -25,8 +26,6 @@ namespace MyPanel
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            AnswerWindow answerWindow = new AnswerWindow();
-
             UIApplication uiapp = commandData.Application;
             UIDocument uidoc = uiapp.ActiveUIDocument;
             RevitApplication app = uiapp.Application;
@@ -35,30 +34,33 @@ namespace MyPanel
             FilteredElementCollector areas = new FilteredElementCollector(doc, doc.ActiveView.Id).OfCategory(BuiltInCategory.OST_Rooms).WhereElementIsNotElementType();
             Dictionary<string, List<Room>> apartments = new Dictionary<string, List<Room>>();
 
+            IList<IList<object>> mistakes = new List<IList<object>>();
+
             ConfigSettingsWindow config = new ConfigSettingsWindow();
             int roundNum = 2;
             double loggieAreaCoef = 0.5;
             double balconyAreaCoef = 0.3;
+            double defaultAreaCoef = 1.0;
             try
             {
                 roundNum = int.Parse(config.GetParameterValue("ROUNDING_NUMBER"));
                 loggieAreaCoef = double.Parse(config.GetParameterValue("LoggiaAreaCoef").Replace(".", ","));
                 balconyAreaCoef = double.Parse(config.GetParameterValue("BalconyAreaCoef").Replace(".", ","));
+                defaultAreaCoef = double.Parse(config.GetParameterValue("DefaultAreaCoef").Replace(".", ","));
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-                MessageBox.Show("Использование значений по умолчанию для параметров: \n\"Числа после запятой\": 2 \n\"Коэффициент площади лоджии\": 0.5 \n\"Коэффициент площади балкона\": 0.3", "Ошибка считывания параметров.");
+                MessageBox.Show("Использование значений по умолчанию для параметров: \n" +
+                    "\"Числа после запятой\": 2\n" +
+                    "\"Коэффициент площади лоджии\": 0.5\n" +
+                    "\"Коэффициент площади балкона\": 0.3\n" +
+                    "\"Коэффициент площади обычных помещений\": 1.0\n", "Ошибка считывания параметров.");
                 config.SetParameterValue("ROUNDING_NUMBER", "2");
                 config.SetParameterValue("LoggiaAreaCoef", "0.5");
                 config.SetParameterValue("BalconyAreaCoef", "0.3");
+                config.SetParameterValue("DefaultAreaCoef", "1.0");
             }
-
-            ExeConfigurationFileMap map = new ExeConfigurationFileMap();
-            map.ExeConfigFilename = Assembly.GetExecutingAssembly().Location + ".config";
-            Configuration libConfig = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
-            AppSettingsSection section = (libConfig.GetSection("appSettings") as AppSettingsSection);
-            KeyValueConfigurationCollection settings = libConfig.AppSettings.Settings;
 
             foreach (Room room in areas)
             {
@@ -91,7 +93,7 @@ namespace MyPanel
                         }
                         catch (Exception ex)
                         {
-                            Debug.Print(ex.ToString());
+                            MessageBox.Show(ex.ToString());
                         }
                         try
                         {
@@ -103,20 +105,24 @@ namespace MyPanel
                             {
                                 apartmaneAreaWithoutSummerRooms += areaOfRoom;
                                 apartmentAreaGeneral += areaOfRoom;
+                                if (coefficent != defaultAreaCoef)
+                                {
+                                    mistakes.Add(new List<object> { room.Id.IntegerValue, coefficent, defaultAreaCoef});
+                                    coefficent = defaultAreaCoef;
+                                    room.LookupParameter("ADSK_Коэффициент площади").Set(defaultAreaCoef);
+                                }
                             }
                             if (roomType == 3 || roomType == 4)
                             {
                                 if (roomType == 3 && coefficent != loggieAreaCoef)
                                 {
-                                    answerWindow.WriteLine(coefficent.ToString());
-                                    MessageBox.Show("Неверно указан коэффициент площади лоджии.");
+                                    mistakes.Add(new List<object> {room.Id.IntegerValue, coefficent, loggieAreaCoef});
                                     coefficent = loggieAreaCoef;
                                     room.LookupParameter("ADSK_Коэффициент площади").Set(loggieAreaCoef);
-                                    answerWindow.WriteLine(coefficent.ToString());
                                 }
                                 else if (roomType == 4 && coefficent != balconyAreaCoef)
                                 {
-                                    MessageBox.Show("Неверно указан коэффициент площади балкона.");
+                                    mistakes.Add(new List<object> {room.Id.IntegerValue, coefficent, balconyAreaCoef});
                                     coefficent = balconyAreaCoef;
                                     room.LookupParameter("ADSK_Коэффициент площади").Set(balconyAreaCoef);
                                 }
@@ -132,10 +138,9 @@ namespace MyPanel
                         }
                         catch (Exception ex)
                         {
-                            Debug.Print(ex.ToString());
+                            MessageBox.Show(ex.ToString());
                         }
                     }
-
                     apartmaneAreaWithoutSummerRooms = UnitUtils.ConvertToInternalUnits(Math.Round(apartmaneAreaWithoutSummerRooms, roundNum), UnitTypeId.SquareMeters);
                     apartmentAreaLivingRooms = UnitUtils.ConvertToInternalUnits(Math.Round(apartmentAreaLivingRooms, roundNum), UnitTypeId.SquareMeters);
                     apartmentAreaGeneral = UnitUtils.ConvertToInternalUnits(Math.Round(apartmentAreaGeneral, roundNum), UnitTypeId.SquareMeters);
@@ -152,14 +157,21 @@ namespace MyPanel
                         }
                         catch (Exception ex)
                         {
-                            Debug.Print(ex.ToString());
+                            MessageBox.Show(ex.ToString());
                         }
                     }
                 }
                 t.Commit();
             }
-
-            Debug.Print("Complited the task.");
+            if (mistakes.Count > 0)
+            {
+                TRGR_RoomIdListWindow roomIdWin = new TRGR_RoomIdListWindow();
+                for (int i = 0; i < mistakes.Count; i++)
+                {
+                    roomIdWin.AddNewLine((int)mistakes[i][0], (double)mistakes[i][1], (double)mistakes[i][2]);
+                }
+                roomIdWin.Show();
+            }
             return Result.Succeeded;
         }
     }

@@ -28,8 +28,9 @@ namespace MyPanel
             InitializeComponent();
 
             configurations.Add("Числа после запятой", "ROUNDING_NUMBER");
-            configurations.Add("Коэфициент площади лоджии", "LoggiaAreaCoef");
-            configurations.Add("Коэфициент площади балкона", "BalconyAreaCoef");
+            configurations.Add("Коэффициент площади лоджии", "LoggiaAreaCoef");
+            configurations.Add("Коэффициент площади балкона", "BalconyAreaCoef");
+            configurations.Add("Коэффициент площади обычных помещений", "DefaultAreaCoef");
 
             cmbBox.ItemsSource = configurations.Keys;
 
@@ -40,21 +41,7 @@ namespace MyPanel
             }
             catch (Exception ex)
             {
-                AnswerWindow answer = new AnswerWindow();
-                foreach (var key in configurations.Keys) 
-                {
-                    answer.WriteLine();
-                }
-                answer.WriteLine("-----------------------");
-                foreach (var key in settings.AllKeys)
-                {
-                    answer.WriteLine(key);
-                }
-                answer.WriteLine("-----------------------");
-                foreach (var key in cmbBox.Items)
-                {
-                    answer.WriteLine(key.ToString());
-                }
+                MessageBox.Show(ex.Message, "Ошибка");
             }
         }
 
