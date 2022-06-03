@@ -24,6 +24,7 @@ namespace MyPanel
     [Transaction(TransactionMode.Manual)]
     public class TRGR_Apartmentography : IExternalCommand
     {
+        private static AnswerWindow ans = new AnswerWindow();
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             UIApplication uiapp = commandData.Application;
@@ -68,12 +69,12 @@ namespace MyPanel
                 {
                     if (!apartments.ContainsKey(room.LookupParameter("ADSK_Номер квартиры").AsString()))
                     {
-                        List<Room> rooms = new List<Room>() {room};
-                        apartments.Add(room.LookupParameter("ADSK_Номер квартиры").AsString(), rooms);
+                        apartments.Add(room.LookupParameter("ADSK_Номер квартиры").AsString(), new List<Room>());
                     }
                     apartments[room.LookupParameter("ADSK_Номер квартиры").AsString()].Add(room);
                 }
             }
+
             using (Transaction t = new Transaction(doc, "Квартирография"))
             {
                 t.Start();
@@ -154,6 +155,7 @@ namespace MyPanel
                             room.LookupParameter("ADSK_Площадь квартиры жилая").Set(apartmentAreaLivingRooms);
                             room.LookupParameter("ADSK_Площадь квартиры общая").Set(apartmentAreaGeneral);
                             room.LookupParameter("TRGR_Площадь квартиры без кф").Set(apartmentAreaGeneralWithoutCoef);
+                            CreateRoomTag(room, doc, 159742);
                         }
                         catch (Exception ex)
                         {
@@ -173,6 +175,12 @@ namespace MyPanel
                 roomIdWin.Show();
             }
             return Result.Succeeded;
+        }
+        private static void CreateRoomTag(Room room, Document doc, int tagType)
+        {
+            RoomTag tag = doc.Create.NewRoomTag(new LinkElementId(room.Id), new UV(), null);
+            tag.ChangeTypeId(new ElementId(tagType));
+            ans.WriteLine(tag.Id.IntegerValue.ToString());
         }
     }
 }

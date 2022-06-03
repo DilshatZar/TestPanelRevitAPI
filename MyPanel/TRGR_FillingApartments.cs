@@ -37,12 +37,12 @@ namespace MyPanel
             doc = uidoc.Document;
 
             phase = doc.Phases.get_Item(doc.Phases.Size - 1);
-            IList<FamilyInstance> entryDoors = new FilteredElementCollector(doc, doc.ActiveView.Id). // Находим входные двери квартиры
-                OfCategory(BuiltInCategory.OST_Doors).
-                OfClass(typeof(FamilyInstance)).
-                Cast<FamilyInstance>().
-                Where(door => door.Symbol.get_Parameter(BuiltInParameter.ALL_MODEL_DESCRIPTION).AsString().Contains("Дверь.Квартирная")). // Здесь и применяется тяжелый фильтр для поиска входных дверей
-                ToList();
+            IList<FamilyInstance> entryDoors = new FilteredElementCollector(doc, doc.ActiveView.Id) // Находим входные двери квартиры
+                .OfCategory(BuiltInCategory.OST_Doors)
+                .OfClass(typeof(FamilyInstance))
+                .Cast<FamilyInstance>()
+                .Where(door => door.Symbol.get_Parameter(BuiltInParameter.ALL_MODEL_DESCRIPTION).AsString().Contains("Дверь.Квартирная")) // Здесь и применяется тяжелый фильтр для поиска входных дверей
+                .ToList();
             FilteredElementCollector allRooms = new FilteredElementCollector(doc, doc.ActiveView.Id).OfCategory(BuiltInCategory.OST_Rooms).WhereElementIsNotElementType();
             
             using (Transaction t = new Transaction(doc, "Нумерация комнат квартир")) // Основная транзакция
@@ -67,6 +67,7 @@ namespace MyPanel
                         try
                         {
                             room.LookupParameter("ADSK_Номер квартиры").Set(apartmentNumber);
+                            room.LookupParameter("ADSK_Этаж").Set($"L{room.Level.Name.Replace("Этаж ", "")}");
                         }
                         catch (Exception ex)
                         {
@@ -89,15 +90,15 @@ namespace MyPanel
                 apartmentRooms = new List<Room>();
             }
             apartmentRooms.Add(currentRoom);
-            List<int> roomsIds = GetIdsOfRoom(apartmentRooms);
+            List<int> roomsIds = apartmentRooms.Select(room => room.Id.IntegerValue).ToList();
 
-            List<FamilyInstance> allDoorsOfRoom = new FilteredElementCollector(doc, doc.ActiveView.Id).
-                OfCategory(BuiltInCategory.OST_Doors).
-                OfClass(typeof(FamilyInstance)).
-                Cast<FamilyInstance>().
-                Where(door => 
-                door.get_FromRoom(phase).Id.IntegerValue == currentRoom.Id.IntegerValue || door.get_ToRoom(phase).Id.IntegerValue == currentRoom.Id.IntegerValue).
-                ToList();
+            List<FamilyInstance> allDoorsOfRoom = new FilteredElementCollector(doc, doc.ActiveView.Id)
+                .OfCategory(BuiltInCategory.OST_Doors)
+                .OfClass(typeof(FamilyInstance))
+                .Cast<FamilyInstance>()
+                .Where(door => 
+                door.get_FromRoom(phase).Id.IntegerValue == currentRoom.Id.IntegerValue || door.get_ToRoom(phase).Id.IntegerValue == currentRoom.Id.IntegerValue)
+                .ToList();
             if (entryDoor != null)
             {
                 allDoorsOfRoom = allDoorsOfRoom.Where(door => door.Id.IntegerValue != entryDoor.Id.IntegerValue).ToList();
@@ -124,9 +125,9 @@ namespace MyPanel
                 }
             }
             Solid currentRoomSolid = GetSolidOfRoom(currentRoom);
-            List<Room> adjoiningRooms = allRooms.Cast<Room>().
-                Where(room => SolidsAreToching(currentRoomSolid, GetSolidOfRoom(room)) && !roomsIds.Contains(room.Id.IntegerValue)).
-                ToList();
+            List<Room> adjoiningRooms = allRooms.Cast<Room>()
+                .Where(room => SolidsAreToching(currentRoomSolid, GetSolidOfRoom(room)) && !roomsIds.Contains(room.Id.IntegerValue))
+                .ToList();
             if (adjoiningRooms.Count > 0)
             {
                 foreach (Room room in adjoiningRooms)
@@ -164,26 +165,14 @@ namespace MyPanel
         private static List<int> GetIdsOfRoom(List<Room> rooms)
         {
             List<int> ids = new List<int>();
-            foreach (Room room in rooms)
-            {
-                ids.Add(room.Id.IntegerValue);
-            }
+            foreach (Room room in rooms) { ids.Add(room.Id.IntegerValue); }
             return ids;
         }
         private static string LeadingZeros(string str)
         {
-            if (str.Length == 1)
-            {
-                return "00" + str;
-            }
-            if (str.Length == 2)
-            {
-                return "0" + str;
-            }
-            if (str.Length == 3)
-            {
-                return str;
-            }
+            if (str.Length == 1) { return "00" + str; }
+            if (str.Length == 2) { return "0" + str; }
+            if (str.Length == 3) { return str; }
             return null;
         }
     }

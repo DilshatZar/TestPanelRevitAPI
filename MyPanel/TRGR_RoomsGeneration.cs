@@ -50,7 +50,6 @@ namespace MyPanel
             using (Transaction t = new Transaction(doc))
             {
                 t.Start("Генерация помещений");
-
                 int roomUp = 3300;
                 int roomDown = 0;
                 foreach (Phase phase in doc.Phases)
@@ -64,7 +63,6 @@ namespace MyPanel
                 {
                     rooms.Add(doc.GetElement(roomId) as Room);
                 }
-
                 t.Commit();
 
                 t.Start("Смена тега помещений");
@@ -83,6 +81,20 @@ namespace MyPanel
                 }
                 t.Commit();
             }
+
+            List<Room> smallRooms = rooms.Where(room => UnitUtils.ConvertFromInternalUnits(room.get_Parameter(BuiltInParameter.ROOM_AREA).AsDouble(), UnitTypeId.SquareMeters) <= 1)
+                .ToList();
+            rooms = rooms.Where(room => UnitUtils.ConvertFromInternalUnits(room.get_Parameter(BuiltInParameter.ROOM_AREA).AsDouble(), UnitTypeId.SquareMeters) > 1).ToList();
+            if (smallRooms.Count > 0)
+            {
+                using (Transaction t = new Transaction(doc, "Удаление малых помещений"))
+                {
+                    t.Start();
+                    doc.Delete(smallRooms.Select(room => room.Id).ToList());
+                    t.Commit();
+                }
+            }
+
 
             FilteredElementCollector plumbingFixtures = new FilteredElementCollector(doc, doc.ActiveView.Id).OfCategory(BuiltInCategory.OST_PlumbingFixtures).WhereElementIsNotElementType();
 
@@ -124,17 +136,23 @@ namespace MyPanel
 
             double loggieAreaCoef = 0.5;
             double balconyAreaCoef = 0.3;
+            double defaultAreaCoef = 1.0;
             try
             {
                 loggieAreaCoef = double.Parse(config.GetParameterValue("LoggiaAreaCoef").Replace(".", ","));
                 balconyAreaCoef = double.Parse(config.GetParameterValue("BalconyAreaCoef").Replace(".", ","));
+                defaultAreaCoef = double.Parse(config.GetParameterValue("DefaultAreaCoef").Replace(".", ","));
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-                MessageBox.Show("Использование значений по умолчанию для параметров: \n\"Коэффициент площади лоджии\": 0.5 \n\"Коэффициент площади балкона\": 0.3", "Ошибка считывания параметров.");
+                MessageBox.Show("Использование значений по умолчанию для параметров: \n" +
+                    "\"Коэффициент площади лоджии\": 0.5 \n" +
+                    "\"Коэффициент площади балкона\": 0.3 \n" +
+                    "\"Коэффициент площади обычных помещений\": 1.0", "Ошибка считывания параметров.");
                 config.SetParameterValue("LoggiaAreaCoef", "0.5");
                 config.SetParameterValue("BalconyAreaCoef", "0.3");
+                config.SetParameterValue("DefaultAreaCoef", "0.1");
             }
 
             using (Transaction t = new Transaction(doc, "Определение помещений"))
@@ -183,22 +201,27 @@ namespace MyPanel
                     if (roomFixtures.Contains("Унитаз") && roomFixtures.Contains("Ванна"))
                     {
                         room.get_Parameter(BuiltInParameter.ROOM_NAME).Set("С.У.");
+                        room.LookupParameter("ADSK_Тип помещения").Set(2);
                     }
                     else if (!roomFixtures.Contains("Ванна") && roomFixtures.Contains("Умывальник") && roomFixtures.Contains("Унитаз"))
                     {
                         room.get_Parameter(BuiltInParameter.ROOM_NAME).Set("Уборная");
+                        room.LookupParameter("ADSK_Тип помещения").Set(2);
                     }
                     else if (!roomFixtures.Contains("Унитаз") && roomFixtures.Contains("Ванна"))
                     {
                         room.get_Parameter(BuiltInParameter.ROOM_NAME).Set("Вання");
+                        room.LookupParameter("ADSK_Тип помещения").Set(2);
                     }
                     else if (!roomFixtures.Contains("Ванна") && !roomFixtures.Contains("Умывальник") && !roomFixtures.Contains("Унитаз") && roomFixtures.Contains("Стиральная машина"))
                     {
                         room.get_Parameter(BuiltInParameter.ROOM_NAME).Set("Постирочная");
+                        room.LookupParameter("ADSK_Тип помещения").Set(2);
                     }
                     else if (roomFixtures.Contains("Кухня"))
                     {
                         room.get_Parameter(BuiltInParameter.ROOM_NAME).Set("Кухня");
+                        room.LookupParameter("ADSK_Тип помещения").Set(2);
                     } 
 
                     List<int> roomWindowsIds = new List<int>();
@@ -215,13 +238,15 @@ namespace MyPanel
                         if (room.Id.IntegerValue == elementId && room.get_Parameter(BuiltInParameter.ROOM_NAME).AsString().Contains("Помещение"))
                         {
                             room.get_Parameter(BuiltInParameter.ROOM_NAME).Set("Жилая комната");
+                            room.LookupParameter("ADSK_Тип помещения").Set(1);
                         }
                     }
                     if (room.get_Parameter(BuiltInParameter.ROOM_NAME).AsString() == "Помещение")
                     {
                         room.get_Parameter(BuiltInParameter.ROOM_NAME).Set("Коридор");
+                        room.LookupParameter("ADSK_Тип помещения").Set(2);
                     }
-                    room.LookupParameter("ADSK_Коэффициент площади").Set(1);
+                    room.LookupParameter("ADSK_Коэффициент площади").Set(defaultAreaCoef);
                 }
                 foreach (FamilyInstance door in doors)
                 {
@@ -229,6 +254,7 @@ namespace MyPanel
                     if (doorFromRoom != null && door.Symbol.get_Parameter(BuiltInParameter.ALL_MODEL_DESCRIPTION).AsString().Contains("Балконная"))
                     {
                         doorFromRoom.get_Parameter(BuiltInParameter.ROOM_NAME).Set("Лоджия");
+                        doorFromRoom.LookupParameter("ADSK_Тип помещения").Set(3);
                         doorFromRoom.LookupParameter("ADSK_Коэффициент площади").Set(loggieAreaCoef);
                     }
                 }
