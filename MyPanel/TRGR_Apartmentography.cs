@@ -24,7 +24,6 @@ namespace MyPanel
     [Transaction(TransactionMode.Manual)]
     public class TRGR_Apartmentography : IExternalCommand
     {
-        private static AnswerWindow ans = new AnswerWindow();
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             UIApplication uiapp = commandData.Application;
@@ -80,6 +79,8 @@ namespace MyPanel
                 t.Start();
                 foreach (string num in apartments.Keys)
                 {
+                    Room biggestRoom = apartments[num][0];
+
                     int numberOfLivingRooms = 0;
                     double apartmentAreaLivingRooms = 0;            // ADSK_Площадь квартиры жилая
                     double apartmaneAreaWithoutSummerRooms = 0;     // ADSK_Площадь квартиры
@@ -87,7 +88,15 @@ namespace MyPanel
                     double apartmentAreaGeneralWithoutCoef = 0;     // TRGR_Площадь квартиры без кф
                     foreach (Room room in apartments[num])
                     {
+                        double biggestArea = Math.Round(UnitUtils.ConvertFromInternalUnits(biggestRoom.get_Parameter(BuiltInParameter.ROOM_AREA).AsDouble(), UnitTypeId.SquareMeters), roundNum);
                         double areaOfRoom = Math.Round(UnitUtils.ConvertFromInternalUnits(room.get_Parameter(BuiltInParameter.ROOM_AREA).AsDouble(), UnitTypeId.SquareMeters), roundNum);
+
+                        if (biggestArea < areaOfRoom)
+                        {
+                            biggestArea = areaOfRoom;
+                            biggestRoom = room;
+                        }
+
                         try
                         {
                             room.LookupParameter("TRGR_Площадь помещения").Set(UnitUtils.ConvertToInternalUnits(Math.Round(areaOfRoom, roundNum), UnitTypeId.SquareMeters));
@@ -155,13 +164,14 @@ namespace MyPanel
                             room.LookupParameter("ADSK_Площадь квартиры жилая").Set(apartmentAreaLivingRooms);
                             room.LookupParameter("ADSK_Площадь квартиры общая").Set(apartmentAreaGeneral);
                             room.LookupParameter("TRGR_Площадь квартиры без кф").Set(apartmentAreaGeneralWithoutCoef);
-                            CreateRoomTag(room, doc, 159742);
+                            CreateRoomTag(room, doc, 159750, "bottom", "right");
                         }
                         catch (Exception ex)
                         {
                             MessageBox.Show(ex.ToString());
                         }
                     }
+                    CreateRoomTag(biggestRoom, doc, 159393, "top", "right", 1, 1);
                 }
                 t.Commit();
             }
@@ -176,11 +186,91 @@ namespace MyPanel
             }
             return Result.Succeeded;
         }
-        private static void CreateRoomTag(Room room, Document doc, int tagType)
+        private static void CreateRoomTag(Room room, Document doc, int tagType,
+            string vert="bottom", string horiz="right",
+            double padx=0.0, double pady=0.0)
         {
-            RoomTag tag = doc.Create.NewRoomTag(new LinkElementId(room.Id), new UV(), null);
-            tag.ChangeTypeId(new ElementId(tagType));
-            ans.WriteLine(tag.Id.IntegerValue.ToString());
+            List<RoomTag> tags = new FilteredElementCollector(doc, doc.ActiveView.Id)
+                .OfCategory(BuiltInCategory.OST_RoomTags)
+                .WhereElementIsNotElementType()
+                .Cast<RoomTag>()
+                .Where(t
+                 => t.Room.Id.IntegerValue == room.Id.IntegerValue
+                 && t.GetTypeId().IntegerValue == tagType)
+                .ToList();
+            if (tags.Count == 0) 
+            {
+                double x = 0;
+                double y = 0;
+                SpatialElementBoundaryOptions options = new SpatialElementBoundaryOptions();
+                options.SpatialElementBoundaryLocation = SpatialElementBoundaryLocation.Finish;
+                IList<IList<BoundarySegment>> boundarySegmentsList = room.GetBoundarySegments(options);
+                foreach (IList<BoundarySegment> boundarySegments in boundarySegmentsList)
+                {
+                    y = Math.Round(boundarySegments[0].GetCurve().GetEndPoint(0).Y, 8);
+                    x = Math.Round(boundarySegments[0].GetCurve().GetEndPoint(0).X, 8);
+                    foreach (BoundarySegment segment in boundarySegments)
+                    {
+                        XYZ startXYZ = segment.GetCurve().GetEndPoint(0);
+                        XYZ endXYZ = segment.GetCurve().GetEndPoint(1);
+                        if (vert == "bottom" && Math.Round(startXYZ.Y, 8) == Math.Round(endXYZ.Y, 8))
+                        {
+                            if (y >= Math.Round(startXYZ.Y, 8))
+                            {
+                                y = Math.Round(startXYZ.Y, 8);
+                                if (horiz == "right")
+                                {
+                                    x = Math.Round(startXYZ.X, 8) > Math.Round(endXYZ.X, 8) ? Math.Round(startXYZ.X, 8) : Math.Round(endXYZ.X, 8);
+                                }
+                                else if (horiz == "left")
+                                {
+                                    x = Math.Round(startXYZ.X, 8) < Math.Round(endXYZ.X, 8) ? Math.Round(startXYZ.X, 8) : Math.Round(endXYZ.X, 8);
+                                }
+                            }
+                        }
+                        else if (vert == "top" && Math.Round(startXYZ.Y, 8) == Math.Round(endXYZ.Y, 8))
+                        {
+                            if (y <= Math.Round(startXYZ.Y, 8))
+                            {
+                                y = Math.Round(startXYZ.Y, 8);
+                                if (horiz == "right")
+                                {
+                                    x = Math.Round(startXYZ.X, 8) > Math.Round(endXYZ.X, 8) ? Math.Round(startXYZ.X, 8) : Math.Round(endXYZ.X, 8);
+                                }
+                                else if (horiz == "left")
+                                {
+                                    x = Math.Round(startXYZ.X, 8) < Math.Round(endXYZ.X, 8) ? Math.Round(startXYZ.X, 8) : Math.Round(endXYZ.X, 8);
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+                RoomTag tag = doc.Create.NewRoomTag(new LinkElementId(room.Id), new UV(x, y), null);
+                tag.ChangeTypeId(new ElementId(tagType));
+
+                double a = 0;
+                double b = 0;
+                BoundingBoxXYZ size = tag.get_BoundingBox(tag.View);
+                if (horiz == "right")
+                {
+                    a = size.Min.X - size.Max.X - padx;
+                }
+                else if (horiz == "left")
+                {
+                    a = size.Max.X - size.Min.X + padx;
+                }
+                if (vert == "top")
+                {
+                    b = size.Min.Y - size.Max.Y - pady;
+                }
+                else if (vert == "bottom")
+                {
+                    b = size.Max.Y - size.Min.Y + pady;
+                }
+                tag.Location.Move(new XYZ(a / 2.0, b / 2.0, 0));
+            }
         }
     }
 }

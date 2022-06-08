@@ -57,7 +57,7 @@ namespace MyPanel
 
             RibbonPanel apartmnetographyPanel = a.CreateRibbonPanel(tabName, "Квартирография");
 
-            PushButtonData genRooms = new PushButtonData("RoomsGen", "Генерация\nкомнат", Assembly.GetExecutingAssembly().Location, "MyPanel.TRGR_RoomsGeneration");
+            PushButtonData genRooms = new PushButtonData("RoomsGen", "Генерация\nкомнат", Assembly.GetExecutingAssembly().Location, typeof(TRGR_RoomsGeneration).FullName);
             genRooms.ToolTip = "Генерация и определение типов помещений.";
             genRooms.LongDescription = "Определяются такие типы помещений, как: " +
                 "\"Жилая комната\", \"Коридор\", \"Лоджия\", \"Ванная\", \"Кухня\", \"Постирочная\", \"С.У.\". " +
@@ -68,7 +68,7 @@ namespace MyPanel
             //genRoomsBtn.LargeImage = genRoomsImgBitmap;
             //genRoomsBtn.Image = genRoomsImgBitmap;
 
-            PushButtonData fillApartments = new PushButtonData("FillApartments", "Заполнение\nквартир", Assembly.GetExecutingAssembly().Location, "MyPanel.TRGR_FillingApartments");
+            PushButtonData fillApartments = new PushButtonData("FillApartments", "Заполнение\nквартир", Assembly.GetExecutingAssembly().Location, typeof(TRGR_FillingApartments).FullName);
             fillApartments.ToolTip = "Нахождение помещений для каждой квартиры с выставлением номера квартиры для каждого помещения и входной двери.";
             fillApartments.LongDescription = "Помещения квартиры обнаруживаются по входной двери, описание типоразмера семейства которого соответствует \"Дверь.Квартирная\". " +
                 "Выставляются параметры \"ADSK_Номер квартиры\" и \"ADSK_Этаж\"";
@@ -78,7 +78,7 @@ namespace MyPanel
             //fillApartmentsBtn.LargeImage = fillApartmentsBitmap;
             //fillApartmentsBtn.Image = fillApartmentsBitmap;
 
-            PushButtonData calcAreas = new PushButtonData("CalculateAreas", "Квартирография", Assembly.GetExecutingAssembly().Location, "MyPanel.TRGR_Apartmentography");
+            PushButtonData calcAreas = new PushButtonData("CalculateAreas", "Квартирография", Assembly.GetExecutingAssembly().Location, typeof(TRGR_Apartmentography).FullName);
             calcAreas.ToolTip = "Вычисление площади помещений для каждой квартиры.";
             calcAreas.LongDescription = "Вычисления происходят только у квартир в активном виде и с заполненными параметрами " +
                 "\"ADSK_Номер квартиры\", \"ADSK_Тип помещения\", и \"ADSK_Коэффициент площади\". " +
@@ -90,7 +90,7 @@ namespace MyPanel
             calcAreasBtn.LargeImage = ConvertToBitmap(calcAreasImg, new Size(32, 32));
             calcAreasBtn.Image = ConvertToBitmap(calcAreasImg , new Size(16, 16));
 
-            PushButtonData chgParametersBtnData = new PushButtonData("ChangeConfigSettings", "Изменить\nпараметр", Assembly.GetExecutingAssembly().Location, "MyPanel.ChangeConfigSettings");
+            PushButtonData chgParametersBtnData = new PushButtonData("ChangeConfigSettings", "Изменить\nпараметр", Assembly.GetExecutingAssembly().Location, typeof(ChangeConfigSettings).FullName);
             chgParametersBtnData.ToolTip = "Изменение параметров для квартирографии.";
             chgParametersBtnData.LongDescription = "Используется для редактирования таких параметров, как: \"Количество чисел после запятой\", применяемый для округления значений вычислений; " +
                 "\"Коэффициент площади лоджии\"; \"Коэффициент площади балкона\"; \"Коэффициент площади обычных помещений\".";

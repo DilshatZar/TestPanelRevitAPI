@@ -95,7 +95,6 @@ namespace MyPanel
                 }
             }
 
-
             FilteredElementCollector plumbingFixtures = new FilteredElementCollector(doc, doc.ActiveView.Id).OfCategory(BuiltInCategory.OST_PlumbingFixtures).WhereElementIsNotElementType();
 
             List<FamilyInstance> kitchenPlumbs = new List<FamilyInstance>();
