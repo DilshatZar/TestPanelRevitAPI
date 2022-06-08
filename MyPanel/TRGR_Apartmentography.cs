@@ -79,7 +79,7 @@ namespace MyPanel
                 t.Start();
                 foreach (string num in apartments.Keys)
                 {
-                    Room biggestRoom = apartments[num][0];
+                    Room biggestRoom = apartments[num][0]; // Самая большая комната
 
                     int numberOfLivingRooms = 0;
                     double apartmentAreaLivingRooms = 0;            // ADSK_Площадь квартиры жилая
@@ -91,7 +91,7 @@ namespace MyPanel
                         double biggestArea = Math.Round(UnitUtils.ConvertFromInternalUnits(biggestRoom.get_Parameter(BuiltInParameter.ROOM_AREA).AsDouble(), UnitTypeId.SquareMeters), roundNum);
                         double areaOfRoom = Math.Round(UnitUtils.ConvertFromInternalUnits(room.get_Parameter(BuiltInParameter.ROOM_AREA).AsDouble(), UnitTypeId.SquareMeters), roundNum);
 
-                        if (biggestArea < areaOfRoom)
+                        if (biggestArea < areaOfRoom) // Нахождение самого большшого помещения
                         {
                             biggestArea = areaOfRoom;
                             biggestRoom = room;
@@ -164,14 +164,14 @@ namespace MyPanel
                             room.LookupParameter("ADSK_Площадь квартиры жилая").Set(apartmentAreaLivingRooms);
                             room.LookupParameter("ADSK_Площадь квартиры общая").Set(apartmentAreaGeneral);
                             room.LookupParameter("TRGR_Площадь квартиры без кф").Set(apartmentAreaGeneralWithoutCoef);
-                            CreateRoomTag(room, doc, 159750, "bottom", "right");
+                            CreateRoomTag(room, doc, 159750, "bottom", "right"); // Создание малого тега с укзанием типа и комнаты, где необходимо создать
                         }
                         catch (Exception ex)
                         {
                             MessageBox.Show(ex.ToString());
                         }
                     }
-                    CreateRoomTag(biggestRoom, doc, 159393, "top", "right", 1, 1);
+                    CreateRoomTag(biggestRoom, doc, 159393, "top", "right", 1, 1); // Создание большого тега с укзанием типа и комнаты, где необходимо создать
                 }
                 t.Commit();
             }
@@ -197,15 +197,15 @@ namespace MyPanel
                 .Where(t
                  => t.Room.Id.IntegerValue == room.Id.IntegerValue
                  && t.GetTypeId().IntegerValue == tagType)
-                .ToList();
-            if (tags.Count == 0) 
+                .ToList(); // Отслеживаем существование тега указанного типа в комнате
+            if (tags.Count == 0) // При отсутствии такового тега, создаем
             {
                 double x = 0;
                 double y = 0;
                 SpatialElementBoundaryOptions options = new SpatialElementBoundaryOptions();
                 options.SpatialElementBoundaryLocation = SpatialElementBoundaryLocation.Finish;
                 IList<IList<BoundarySegment>> boundarySegmentsList = room.GetBoundarySegments(options);
-                foreach (IList<BoundarySegment> boundarySegments in boundarySegmentsList)
+                foreach (IList<BoundarySegment> boundarySegments in boundarySegmentsList) // Определяем угол, в котором должен находитья создаваемый тег
                 {
                     y = Math.Round(boundarySegments[0].GetCurve().GetEndPoint(0).Y, 8);
                     x = Math.Round(boundarySegments[0].GetCurve().GetEndPoint(0).X, 8);
@@ -243,12 +243,12 @@ namespace MyPanel
                                 }
                             }
                         }
-                    }
+                    } 
                 }
 
 
-                RoomTag tag = doc.Create.NewRoomTag(new LinkElementId(room.Id), new UV(x, y), null);
-                tag.ChangeTypeId(new ElementId(tagType));
+                RoomTag tag = doc.Create.NewRoomTag(new LinkElementId(room.Id), new UV(x, y), null); // Создание тега
+                tag.ChangeTypeId(new ElementId(tagType)); // Смена типа тега
 
                 double a = 0;
                 double b = 0;
@@ -269,7 +269,7 @@ namespace MyPanel
                 {
                     b = size.Max.Y - size.Min.Y + pady;
                 }
-                tag.Location.Move(new XYZ(a / 2.0, b / 2.0, 0));
+                tag.Location.Move(new XYZ(a / 2.0, b / 2.0, 0)); // Смещение тега от угла в зависимости от размера и местоположения
             }
         }
     }
