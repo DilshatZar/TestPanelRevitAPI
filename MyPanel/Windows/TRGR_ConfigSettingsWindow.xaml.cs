@@ -27,10 +27,12 @@ namespace MyPanel
 
             InitializeComponent();
 
-            configurations.Add("Числа после запятой", "ROUNDING_NUMBER");
+            configurations.Add("Числа после запятой", "RoundingNumber");
             configurations.Add("Коэффициент площади лоджии", "LoggiaAreaCoef");
             configurations.Add("Коэффициент площади балкона", "BalconyAreaCoef");
             configurations.Add("Коэффициент площади обычных помещений", "DefaultAreaCoef");
+            configurations.Add("Смещение комнаты сверху", "RoomUpperOffset");
+            configurations.Add("Смещение комнаты снизу", "RoomLowerOffset");
 
             cmbBox.ItemsSource = configurations.Keys;
 
@@ -52,7 +54,6 @@ namespace MyPanel
                 settings[configurations[cmbBox.SelectedItem.ToString()]].Value = txtBox.Text;
                 libConfig.Save(ConfigurationSaveMode.Modified);
                 ConfigurationManager.RefreshSection(libConfig.AppSettings.SectionInformation.Name);
-                Close();
             }
             catch (Exception ex)
             {
@@ -64,7 +65,6 @@ namespace MyPanel
         {
             Close();
         }
-
         private void cmbBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -82,12 +82,15 @@ namespace MyPanel
         {
             return settings[name].Value;
         }
-
         public void SetParameterValue(string name, string value)
         {
             settings[name].Value = value;
             libConfig.Save(ConfigurationSaveMode.Modified);
             ConfigurationManager.RefreshSection(libConfig.AppSettings.SectionInformation.Name);
+        }
+        public void NormalizeValues()
+        {
+
         }
     }
 }

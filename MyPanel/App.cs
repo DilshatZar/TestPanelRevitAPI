@@ -23,60 +23,35 @@ namespace MyPanel
         public Result OnStartup(UIControlledApplication a)
         {
             string tabName = "Третий Трест";
-            string panelName = "Тестовая панель";
+            //string panelName = "Тестовая панель";
             a.CreateRibbonTab(tabName);
             //RibbonPanel panel = a.CreateRibbonPanel(tabName, panelName);
 
-            //PushButtonData newButton = new PushButtonData("Test Button", "ГК Третий\nТрест", Assembly.GetExecutingAssembly().Location, "MyPanel.ShowDialogInfoButton");
-            //PushButton newBtn = panel.AddItem(newButton) as PushButton;
-            //Image img = Properties.Resources.ГК_ТретийТрест;
-            //ImageSource imgSrc = ConvertToBitmap(img);
-            //newBtn.LargeImage = imgSrc;
-            //newBtn.Image = imgSrc;
-
-            //PushButtonData newButton1 = new PushButtonData("Task1", "Task1", Assembly.GetExecutingAssembly().Location, "MyPanel.TRGR_FillingApartments");
-            //PushButton newBtn1 = panel.AddItem(newButton1) as PushButton;
-            //Image img1 = Properties.Resources.test1_32;
-            //ImageSource imgSrc1 = ConvertToBitmap(img1);
-            //newBtn1.LargeImage = imgSrc1;
-            //newBtn1.Image = imgSrc1;
-
-            //PushButtonData newButton2 = new PushButtonData("Task2", "Task2", Assembly.GetExecutingAssembly().Location, "MyPanel.SelectMaterialsBtn");
-            //PushButton newBtn2 = panel.AddItem(newButton2) as PushButton;
-            //Image img2 = Properties.Resources.task3;
-            //ImageSource imgSrc2 = ConvertToBitmap(img2);
-            //newBtn2.LargeImage = imgSrc2;
-            //newBtn2.Image = imgSrc2;
-
-            //PushButtonData newButton3 = new PushButtonData("RenameRooms", "Переименовать комнаты", Assembly.GetExecutingAssembly().Location, "MyPanel.RenameAllRooms");
-            //PushButton newBtn3 = panel.AddItem(newButton3) as PushButton;
-            //Image img3 = Properties.Resources.поэтажный_план_32;
-            //ImageSource imgSrc3 = Conver(img3);
-            //newBtn3.LargeImage = imgSrc3;
-            //newBtn3.Image = imgSrc3;
-
             RibbonPanel apartmnetographyPanel = a.CreateRibbonPanel(tabName, "Квартирография");
 
-            PushButtonData genRooms = new PushButtonData("RoomsGen", "Генерация\nкомнат", Assembly.GetExecutingAssembly().Location, typeof(TRGR_RoomsGeneration).FullName);
-            genRooms.ToolTip = "Генерация и определение типов помещений.";
+            PushButtonData genRooms = new PushButtonData("RoomsGen", "Генерация\nи заполнение\nпомещений", Assembly.GetExecutingAssembly().Location, typeof(TRGR_RoomsGeneration).FullName);
+            genRooms.ToolTip = "Генерация и определение типов помещений. " +
+                "Нахождение помещений для каждой квартиры с выставлением номера квартиры для каждого помещения и входной двери.";
             genRooms.LongDescription = "Определяются такие типы помещений, как: " +
                 "\"Жилая комната\", \"Коридор\", \"Лоджия\", \"Ванная\", \"Кухня\", \"Постирочная\", \"С.У.\". " +
-                "Для определения типа используются окна, двери, а также размещенные в помещении экземпляры категории PlumbingFixtures.";
+                "Для определения типа используются окна, двери, а также размещенные в помещении экземпляры категории PlumbingFixtures." + 
+                "Помещения квартиры обнаруживаются по входной двери, описание типоразмера семейства которого соответствует \"Дверь.Квартирная\". " +
+                "Выставляются параметры \"ADSK_Номер квартиры\" и \"ADSK_Этаж\"";
             PushButton genRoomsBtn = apartmnetographyPanel.AddItem(genRooms) as PushButton;
             //Image genRoomsImg = Properties.Resources.поэтажный_план_32;
             //ImageSource genRoomsImgBitmap = ConvertToBitmap(genRoomsImg);
             //genRoomsBtn.LargeImage = genRoomsImgBitmap;
             //genRoomsBtn.Image = genRoomsImgBitmap;
 
-            PushButtonData fillApartments = new PushButtonData("FillApartments", "Заполнение\nквартир", Assembly.GetExecutingAssembly().Location, typeof(TRGR_FillingApartments).FullName);
-            fillApartments.ToolTip = "Нахождение помещений для каждой квартиры с выставлением номера квартиры для каждого помещения и входной двери.";
-            fillApartments.LongDescription = "Помещения квартиры обнаруживаются по входной двери, описание типоразмера семейства которого соответствует \"Дверь.Квартирная\". " +
-                "Выставляются параметры \"ADSK_Номер квартиры\" и \"ADSK_Этаж\"";
-            PushButton fillApartmentsBtn = apartmnetographyPanel.AddItem(fillApartments) as PushButton;
-            //Image fillApartmentsImg = Properties.Resources.поэтажный_план_32;
-            //ImageSource fillApartmentsBitmap = ConvertToBitmap(fillApartmentsImg);
-            //fillApartmentsBtn.LargeImage = fillApartmentsBitmap;
-            //fillApartmentsBtn.Image = fillApartmentsBitmap;
+            //PushButtonData fillApartments = new PushButtonData("FillApartments", "Заполнение\nквартир", Assembly.GetExecutingAssembly().Location, typeof(TRGR_FillingApartments).FullName);
+            //fillApartments.ToolTip = "Нахождение помещений для каждой квартиры с выставлением номера квартиры для каждого помещения и входной двери.";
+            //fillApartments.LongDescription = "Помещения квартиры обнаруживаются по входной двери, описание типоразмера семейства которого соответствует \"Дверь.Квартирная\". " +
+            //    "Выставляются параметры \"ADSK_Номер квартиры\" и \"ADSK_Этаж\"";
+            //PushButton fillApartmentsBtn = apartmnetographyPanel.AddItem(fillApartments) as PushButton;
+            ////Image fillApartmentsImg = Properties.Resources.поэтажный_план_32;
+            ////ImageSource fillApartmentsBitmap = ConvertToBitmap(fillApartmentsImg);
+            ////fillApartmentsBtn.LargeImage = fillApartmentsBitmap;
+            ////fillApartmentsBtn.Image = fillApartmentsBitmap;
 
             PushButtonData calcAreas = new PushButtonData("CalculateAreas", "Квартирография", Assembly.GetExecutingAssembly().Location, typeof(TRGR_Apartmentography).FullName);
             calcAreas.ToolTip = "Вычисление площади помещений для каждой квартиры.";
@@ -93,7 +68,7 @@ namespace MyPanel
             PushButtonData chgParametersBtnData = new PushButtonData("ChangeConfigSettings", "Изменить\nпараметр", Assembly.GetExecutingAssembly().Location, typeof(ChangeConfigSettings).FullName);
             chgParametersBtnData.ToolTip = "Изменение параметров для квартирографии.";
             chgParametersBtnData.LongDescription = "Используется для редактирования таких параметров, как: \"Количество чисел после запятой\", применяемый для округления значений вычислений; " +
-                "\"Коэффициент площади лоджии\"; \"Коэффициент площади балкона\"; \"Коэффициент площади обычных помещений\".";
+                "\"Коэффициент площади лоджии\"; \"Коэффициент площади балкона\"; \"Коэффициент площади обычных помещений\"; \"Смещение комнаты сверху\"; \"Смещение комнаты снизу\".";
             PushButton chgParametersBtn = apartmnetographyPanel.AddItem(chgParametersBtnData) as PushButton;
             Image chgParametersImg = Properties.Resources.settings_32;
             chgParametersBtn.LargeImage = ConvertToBitmap(chgParametersImg, new Size(32, 32));

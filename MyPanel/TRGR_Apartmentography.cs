@@ -43,7 +43,7 @@ namespace MyPanel
             double defaultAreaCoef = 1.0;
             try
             {
-                roundNum = int.Parse(config.GetParameterValue("ROUNDING_NUMBER"));
+                roundNum = int.Parse(config.GetParameterValue("RoundingNumber"));
                 loggieAreaCoef = double.Parse(config.GetParameterValue("LoggiaAreaCoef").Replace(".", ","));
                 balconyAreaCoef = double.Parse(config.GetParameterValue("BalconyAreaCoef").Replace(".", ","));
                 defaultAreaCoef = double.Parse(config.GetParameterValue("DefaultAreaCoef").Replace(".", ","));
@@ -56,7 +56,7 @@ namespace MyPanel
                     "\"Коэффициент площади лоджии\": 0.5\n" +
                     "\"Коэффициент площади балкона\": 0.3\n" +
                     "\"Коэффициент площади обычных помещений\": 1.0\n", "Ошибка считывания параметров.");
-                config.SetParameterValue("ROUNDING_NUMBER", "2");
+                config.SetParameterValue("RoundingNumber", "2");
                 config.SetParameterValue("LoggiaAreaCoef", "0.5");
                 config.SetParameterValue("BalconyAreaCoef", "0.3");
                 config.SetParameterValue("DefaultAreaCoef", "1.0");
